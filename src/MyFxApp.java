@@ -24,7 +24,17 @@ public class MyFxApp extends Application {
         Button pressMe = new Button("Press Me To Reveal Text!");
         Slider slider = new Slider(0, 100, 0);
         ToggleButton toggleButton1 = new ToggleButton("Toggle?");
+        RadioButton radioButton1 = new RadioButton("Left");
         label1.setFont(new Font("Arial", 24));
+        ProgressBar progressBar = new ProgressBar(0);
+        PasswordField passwordField = new PasswordField();
+        Button button = new Button("Click to get password");
+        CheckBox checkBox1 = new CheckBox("Green");
+
+        button.setOnAction(action -> {
+            System.out.println(passwordField.getText());
+        });
+
 
         pressMe.setOnAction(actionEvent -> {
             label4.setText("Nice Job! Type in the Text Field to edit what this says!");
@@ -54,7 +64,11 @@ public class MyFxApp extends Application {
         HBox update3 = new HBox(vbox2,hboxSlider);
         VBox update4 = new VBox(update3,vboxToggleButton);
         VBox update5 = new VBox(update4,label4,pressMe,typeHere);
-        Scene scene = new Scene(update5, 1440, 1080);
+        VBox update6 = new VBox(update5,radioButton1);
+        VBox update7 = new VBox(update6,progressBar);
+        HBox update8 = new HBox(update7,passwordField, button);
+        VBox update9 = new VBox(update7,update8, checkBox1);
+        Scene scene = new Scene(update9, 1440, 1080);
 
         // Put layout on stage and open the curtains
         primaryStage.setScene(scene);
