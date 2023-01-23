@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -14,7 +16,9 @@ import javafx.scene.layout.GridPane;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 
@@ -30,6 +34,7 @@ public class PhotoViewerApp extends Application {
         Button startButton = new Button("Start Browsing Images?");
         Button left = new Button("<");
         Button right = new Button(">");
+        Button FileChooserButton = new Button("add your own image?");
         Image fog = new Image(new FileInputStream("fogForest.jpg"));
         images.add(fog); // index: 0
 // 1st image gets added at images ArrayList index 0
@@ -46,20 +51,38 @@ public class PhotoViewerApp extends Application {
 
         Image bumps = new Image(new FileInputStream("bumps.jpeg"));
         images.add(bumps);
-        index = 4;
+
 
         ImageView imageView = new ImageView(bumps);
         imageView.setFitHeight(300);
         imageView.setFitWidth(400);
         imageView.setVisible(false);
+        left.setVisible(false);
+        right.setVisible(false);
+        FileChooserButton.setVisible(false);
+        FileChooser fileChooser = new FileChooser();
+
         startButton.setOnAction(action -> {
             imageView.setVisible(true);
             startButton.setVisible(false);
-        });
+            left.setVisible(true);
+            right.setVisible(true);
+            FileChooserButton.setVisible(true);
 
+        });
+        FileChooserButton.setOnAction(e -> {
+            File selectedFile = fileChooser.showOpenDialog(primaryStage);
+            Image customImage = null;
+            try {
+                customImage = new Image(new FileInputStream(selectedFile));
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+            images.add(customImage);
+        });
         right.setOnAction(actionEvent -> {
             if (index == 0) {
-                index = 4;
+                index = images.size();
             } else {
                 index--;
             }
@@ -69,7 +92,7 @@ public class PhotoViewerApp extends Application {
         });
 
         left.setOnAction(actionEvent -> {
-            if (index == 4) {
+            if (index == images.size()) {
                 index = 0;
             } else {
                 index++;
@@ -86,7 +109,8 @@ public class PhotoViewerApp extends Application {
         VBox VboxStartButton = new VBox(Label1,startButton);
         HBox LeftRightControls = new HBox(left,right);
         VBox VboxBumps = new VBox(VboxStartButton,imageView, LeftRightControls);
-        Scene scene = new Scene(VboxBumps, 1440, 1080);
+        VBox VBoxFileAdder = new VBox(VboxBumps,FileChooserButton);
+        Scene scene = new Scene(VBoxFileAdder, 1440, 1080);
 
         // Put layout on stage and open the curtains
         primaryStage.setScene(scene);
